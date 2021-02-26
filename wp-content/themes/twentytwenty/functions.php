@@ -778,16 +778,10 @@ function myapi_pick_ceil( WP_REST_Request $request ){
                
             }
             
-            
-         
-    
 
 			$return = array(
 				'message'   => 'Сохранено',
 				'ID'        => 1
-
-	if ( empty( $return ) )
-		return new WP_Error( 'no_author_posts', 'Записей не найдено', [ 'status' => 404 ] );
 
 );
 
