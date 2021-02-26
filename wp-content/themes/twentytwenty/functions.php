@@ -758,3 +758,43 @@ function twentytwenty_get_elements_array() {
 	*/
 	return apply_filters( 'twentytwenty_get_elements_array', $elements );
 }
+
+function myapi_pick_ceil( WP_REST_Request $request ){
+
+    $n = 99;
+    $a = mt_rand (1,$n);
+
+            if(1<= $a && $a <=33){
+               echo  "Вы выиграли попробуйте еще раз";
+               
+               
+            }
+            else if(34<= $a && $a <= 66){
+               echo "Вы получите случайный подарок";
+               
+            }
+            else{
+               echo "Вы проиграли";
+               
+            }
+            
+            
+         
+    
+
+	$posts = get_posts( array(
+		'author' => (int) $request['id'],
+	) );
+
+	if ( empty( $posts ) )
+		return new WP_Error( 'no_author_posts', 'Записей не найдено', [ 'status' => 404 ] );
+
+	return $posts;
+}
+add_action( 'rest_api_init', function(){
+
+	register_rest_route( 'myapi/v1', '/game/Mines', [
+		'methods'  => 'GET',
+		'callback' => 'myapi_pick_ceil',
+	] );
+} );
