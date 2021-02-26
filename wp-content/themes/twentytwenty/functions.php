@@ -766,21 +766,22 @@ function myapi_pick_ceil( WP_REST_Request $request ){
 
         	if(1<= $a && $a <=33){
 				$b="Вы выиграли попробуйте еще раз";
-               
+				$num = 1;
                
             }
             else if(34<= $a && $a <= 66){
 				$b="Вы получите случайный подарок";
-               
+				$num = 2;
             }
             else{
                	$b="Вы проиграли";
-               
+				$num = 3;
             }
            
           
 		   $return = array(
 			'result' => $b,
+			'num' => $num,
 		);
 		
 		wp_send_json( $return );
