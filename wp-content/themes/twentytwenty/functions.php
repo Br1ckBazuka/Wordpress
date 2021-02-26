@@ -764,35 +764,33 @@ function myapi_pick_ceil( WP_REST_Request $request ){
     $n = 99;
     $a = mt_rand (1,$n);
 
-            if(1<= $a && $a <=33){
-               echo  "Вы выиграли попробуйте еще раз";
+        	if(1<= $a && $a <=33){
+				$b="Вы выиграли попробуйте еще раз";
                
                
             }
             else if(34<= $a && $a <= 66){
-               echo "Вы получите случайный подарок";
+				$b="Вы получите случайный подарок";
                
             }
             else{
-               echo "Вы проиграли";
+               	$b="Вы проиграли";
                
             }
-			
-           }; 
+           
           
-			$return = array(
-				'message'   => 'Сохранено',
-				'ID'        => 1
-
-);
-
-
-wp_send_json( $return );
+		   $return = array(
+			'result' => $b,
+		);
+		
+		wp_send_json( $return );
+}
 
 add_action( 'rest_api_init', function(){
 
-	register_rest_route( 'myapi/v1', '/game/Mines', [
+	register_rest_route( 'myapi/v1', '/game/Mines/', [
 		'methods'  => 'GET',
 		'callback' => 'myapi_pick_ceil',
 	] );
+
 } );
