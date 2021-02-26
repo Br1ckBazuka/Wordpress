@@ -777,11 +777,8 @@ function myapi_pick_ceil( WP_REST_Request $request ){
                echo "Вы проиграли";
                
             }
-         };   
-            
-         
-    
-
+           }; 
+          
 			$return = array(
 				'message'   => 'Сохранено',
 				'ID'        => 1
