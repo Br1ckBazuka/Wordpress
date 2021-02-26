@@ -782,15 +782,17 @@ function myapi_pick_ceil( WP_REST_Request $request ){
          
     
 
-	$posts = get_posts( array(
-		'author' => (int) $request['id'],
-	) );
+			$return = array(
+				'message'   => 'Сохранено',
+				'ID'        => 1
 
-	if ( empty( $posts ) )
+	if ( empty( $return ) )
 		return new WP_Error( 'no_author_posts', 'Записей не найдено', [ 'status' => 404 ] );
 
-	return $posts;
-}
+);
+
+wp_send_json( $return );
+
 add_action( 'rest_api_init', function(){
 
 	register_rest_route( 'myapi/v1', '/game/Mines', [
