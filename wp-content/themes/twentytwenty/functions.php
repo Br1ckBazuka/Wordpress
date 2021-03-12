@@ -759,31 +759,72 @@ function twentytwenty_get_elements_array() {
 	return apply_filters( 'twentytwenty_get_elements_array', $elements );
 }
 
+
 function myapi_pick_ceil( WP_REST_Request $request ){
+	
+	global $wpdb;
+	// $wpdb->insert( 'wpru_gameminer', ['type_prize' => $num], [ '%d' ] );
+	// $result=$wpdb->insert( 
+	// 	$wpdb->prefix . 'wp_wpru_gameminer',
+	// 	array(
+	// 		'type_prize' => $num,
+	// 		'cell_number'=> '',
+	// 		'user_id'=>'',
+	// 		'selected_date'=>'',
+	// 		'id'=>[],
+	// 	) 
+	// 	echo $result;
+	// );
+	// $wpdb->get_var('query',$column_offset = 5, $row_offset = 1);
+// 	$result = $wpdb->get_var("SELECT type_prize FROM gameminer WHERE type_prize = $num ");
+ 
+//    // Echo the user's email address
+//    echo $result;
+
+// http://wp.ru/wp-json/myapi/v1/game/Mines/
+
+	date_default_timezone_set('Europe/Samara');
+	echo $selected_date = date('Y-m-d H:i:s');
+	$cell_number=1;
+	$user_id=1;
 
     $n = 99;
     $a = mt_rand (1,$n);
 
         	if(1<= $a && $a <=33){
 				$b="Вы выиграли попробуйте еще раз";
-				$num = 1;
+				$type_prize = 1;
                
             }
             else if(34<= $a && $a <= 66){
 				$b="Вы получите случайный подарок";
-				$num = 2;
+				$type_prize = 2;
             }
             else{
                	$b="Вы проиграли";
-				$num = 3;
+				$type_prize = 3;
             }
            
           
 		   $return = array(
-			'result' => $b,
-			'num' => $num,
+			'result' => $b
 		);
+
+		$b = $wpdb->get_results ("SELECT selected_date, cell_number FROM `wp_wpru_gameminer` WHERE cell_number between 1 and 25 AND selected_date 'LIMIT 25");
+
+	if ( $b ) {
+		foreach ($b as $selected_date ) {
+			echo $selected_date;
+		}
+
+		foreach ($b as $cell_number ) {
+			echo $cell_number;
+		}
+	}
+	$wpdb->query( $table="INSERT INTO `wp_wpru_gameminer` (`cell_number`, `user_id`, `selected_date`, `type_prize`) VALUES ( '$user_id ', '  $cell_number',  '$selected_date ', '$type_prize' )");
+	echo $table;
 		
+	
 		wp_send_json( $return );
 }
 
