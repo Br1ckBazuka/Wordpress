@@ -762,77 +762,66 @@ function twentytwenty_get_elements_array() {
 
 function myapi_pick_ceil( WP_REST_Request $request ){
 	
-	global $wpdb;
-	// $wpdb->insert( 'wpru_gameminer', ['type_prize' => $num], [ '%d' ] );
-	// $result=$wpdb->insert( 
-	// 	$wpdb->prefix . 'wp_wpru_gameminer',
-	// 	array(
-	// 		'type_prize' => $num,
-	// 		'cell_number'=> '',
-	// 		'user_id'=>'',
-	// 		'selected_date'=>'',
-	// 		'id'=>[],
-	// 	) 
-	// 	echo $result;
-	// );
-	// $wpdb->get_var('query',$column_offset = 5, $row_offset = 1);
-// 	$result = $wpdb->get_var("SELECT type_prize FROM gameminer WHERE type_prize = $num ");
- 
-//    // Echo the user's email address
-//    echo $result;
-
+global $wpdb;
+	
 // http://wp.ru/wp-json/myapi/v1/game/Mines/
 
-	date_default_timezone_set('Europe/Samara');
-	echo $selected_date = date('Y-m-d H:i:s');
-	$cell_number=1;
-	$user_id=1;
-
-    $n = 99;
-    $a = mt_rand (1,$n);
-
-        	if(1<= $a && $a <=33){
-				$b="Вы выиграли попробуйте еще раз";
-				$type_prize = 1;
-               
-            }
-            else if(34<= $a && $a <= 66){
-				$b="Вы получите случайный подарок";
-				$type_prize = 2;
-            }
-            else{
-               	$b="Вы проиграли";
-				$type_prize = 3;
-            }
-           
-          
-		   $return = array(
-			'result' => $b
-		);
-
-		$b = $wpdb->get_results ("SELECT selected_date, cell_number FROM `wp_wpru_gameminer` WHERE cell_number between 1 and 25 AND selected_date 'LIMIT 25");
-
-	if ( $b ) {
-		foreach ($b as $selected_date ) {
-			echo $selected_date;
-		}
-
-		foreach ($b as $cell_number ) {
-			echo $cell_number;
-		}
-	}
-	$wpdb->query( $table="INSERT INTO `wp_wpru_gameminer` (`cell_number`, `user_id`, `selected_date`, `type_prize`) VALUES ( '$user_id ', '  $cell_number',  '$selected_date ', '$type_prize' )");
-	echo $table;
-		
+date_default_timezone_set('Europe/Samara');
+echo $selected_date = date('Y-m-d H:i:s');
+$cell_number=1;
+$user_id=1;
 	
-		wp_send_json( $return );
+$n = 99;
+$a = mt_rand (1,$n);
+
+$result = $wpdb->get_results ("SELECT selected_date, cell_number FROM `wp_wpru_gameminer` WHERE cell_number between 1 and 25 AND selected_date > = date('Y-m-d H:i:s') AND type_prize!=2");
+$rcount = count($result);
+
+if($rcount >= 3) {
+    $return = ARRAY(
+        'MESSAGE' => "YOU LOSER",
+        'TYPE_PRIZE' => 3
+        );
+   return wp_send_json( $return );
 }
+$type_prize=0;
+if(1<= $a && $a <=33){
+	$result="Вы выиграли попробуйте еще раз";
+	$type_prize = 1;
+	
+}
+else if(34<= $a && $a <= 66){
+	$result="Вы получите случайный подарок";
+	$type_prize = 2;
+}
+else{
+	$result="Вы проиграли";
+	$type_prize = 3;
+}
+
+
+$return = array(
+	'result'   => $type_prize,
+	'MESSAGE'  => $result
+);
+
+}
+$table="INSERT INTO `wp_wpru_gameminer` (`cell_number`, `user_id`, `selected_date`, `type_prize`) 
+		VALUES ('$cell_number', '$user_id', '$selected_date', '$type_prize')";
+$wpdb->query( $table );
+
+$return = array(
+	'result'   => $type_prize,
+	'MESSAGE'  => $result
+);
+
+wp_send_json( $return );
 
 add_action( 'rest_api_init', function(){
 
-	register_rest_route( 'myapi/v1', '/game/Mines/', [
-		'methods'  => 'GET',
-		'callback' => 'myapi_pick_ceil',
-	] );
+register_rest_route( 'myapi/v1', '/game/Mines/', [
+	'methods'  => 'GET',
+	'callback' => 'myapi_pick_ceil',
+] );
 
 } );
