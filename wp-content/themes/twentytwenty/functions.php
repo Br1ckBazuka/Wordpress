@@ -765,15 +765,14 @@ function myapi_pick_ceil( WP_REST_Request $request ){
 	global $wpdb;
 // http://wp.ru/wp-json/myapi/v1/game/Mines/
 
-date_default_timezone_set('Europe/Samara');
-echo $selected_date = date('Y-m-d H:i:s');
+$selected_date=date("Y-m-d 00:00:00");
 $cell_number=1;
 $user_id=1;
 $type_prize=0;	
 $n = 99;
 $a = mt_rand (1,$n);
 
-$result = $wpdb->get_results ("SELECT selected_date, cell_number FROM `wp_wpru_gameminer` WHERE cell_number between 1 and 25 AND selected_date > = date('Y-m-d H:i:s') AND type_prize!=2");
+$result = $wpdb->get_results ("SELECT selected_date, cell_number FROM `wp_wpru_gameminer` WHERE cell_number between 1 and 25 AND selected_date > date('Y-m-d 00:00:00') AND type_prize != 2");
 var_dump ($result);
 
 $rcount = count($result);
