@@ -762,29 +762,31 @@ function twentytwenty_get_elements_array() {
 
 function myapi_pick_ceil( WP_REST_Request $request ){
 	
-global $wpdb;
-	
+	global $wpdb;
 // http://wp.ru/wp-json/myapi/v1/game/Mines/
 
 date_default_timezone_set('Europe/Samara');
 echo $selected_date = date('Y-m-d H:i:s');
 $cell_number=1;
 $user_id=1;
-	
+$type_prize=0;	
 $n = 99;
 $a = mt_rand (1,$n);
 
 $result = $wpdb->get_results ("SELECT selected_date, cell_number FROM `wp_wpru_gameminer` WHERE cell_number between 1 and 25 AND selected_date > = date('Y-m-d H:i:s') AND type_prize!=2");
+var_dump ($result);
 $rcount = count($result);
 
 if($rcount >= 3) {
-    $return = ARRAY(
+    $return = array(
         'MESSAGE' => "YOU LOSER",
-        'TYPE_PRIZE' => 3
+        'type_prize' => 3
         );
    return wp_send_json( $return );
 }
-$type_prize=0;
+
+
+
 if(1<= $a && $a <=33){
 	$result="Вы выиграли попробуйте еще раз";
 	$type_prize = 1;
