@@ -775,6 +775,7 @@ $a = mt_rand (1,$n);
 
 $result = $wpdb->get_results ("SELECT selected_date, cell_number FROM `wp_wpru_gameminer` WHERE cell_number between 1 and 25 AND selected_date > = date('Y-m-d H:i:s') AND type_prize!=2");
 var_dump ($result);
+
 $rcount = count($result);
 
 if($rcount >= 3) {
@@ -807,10 +808,10 @@ $return = array(
 	'MESSAGE'  => $result
 );
 
-}
-$table="INSERT INTO `wp_wpru_gameminer` (`cell_number`, `user_id`, `selected_date`, `type_prize`) 
-		VALUES ('$cell_number', '$user_id', '$selected_date', '$type_prize')";
-$wpdb->query( $table );
+
+$wpdb->query("INSERT INTO `wp_wpru_gameminer` ( `user_id`,`cell_number`, `selected_date`, `type_prize`) 
+VALUES ( '$user_id','$cell_number', '$selected_date', '$type_prize')" );
+
 
 $return = array(
 	'result'   => $type_prize,
@@ -818,7 +819,7 @@ $return = array(
 );
 
 wp_send_json( $return );
-
+}
 add_action( 'rest_api_init', function(){
 
 register_rest_route( 'myapi/v1', '/game/Mines/', [
