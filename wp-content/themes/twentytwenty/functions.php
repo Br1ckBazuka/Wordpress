@@ -766,21 +766,19 @@ function myapi_pick_ceil( WP_REST_Request $request ){
 // http://wp.ru/wp-json/myapi/v1/game/Mines/
 
 $selected_date=date("Y-m-d 00:00:00");
-$cell_number=1;
-$user_id=1;
-$type_prize=0;	
-$n = 99;
-$a = mt_rand (1,$n);
+$cell_number=$request['cell_number'];;
+$user_id=$request['user_id'];
+$a = mt_rand (1,99);
 
 $result = $wpdb->get_results ("SELECT selected_date, cell_number FROM `wp_wpru_gameminer` WHERE cell_number between 1 and 25 AND selected_date > date('Y-m-d 00:00:00') AND type_prize != 2");
-var_dump ($result);
+
 
 $rcount = count($result);
 
 if($rcount >= 3) {
     $return = array(
-        'MESSAGE' => "YOU LOSER",
-        'type_prize' => 3
+        'MESSAGE' => "Почитай статьи хватит играть",
+        'type_prize' => 4
         );
    return wp_send_json( $return );
 }
@@ -802,10 +800,7 @@ else{
 }
 
 
-$return = array(
-	'result'   => $type_prize,
-	'MESSAGE'  => $result
-);
+
 
 
 $wpdb->query("INSERT INTO `wp_wpru_gameminer` ( `user_id`,`cell_number`, `selected_date`, `type_prize`) 
@@ -813,7 +808,7 @@ VALUES ( '$user_id','$cell_number', '$selected_date', '$type_prize')" );
 
 
 $return = array(
-	'result'   => $type_prize,
+	'type_prize'   => $type_prize,
 	'MESSAGE'  => $result
 );
 
@@ -822,7 +817,7 @@ wp_send_json( $return );
 add_action( 'rest_api_init', function(){
 
 register_rest_route( 'myapi/v1', '/game/Mines/', [
-	'methods'  => 'GET',
+	'methods'  => 'POST',
 	'callback' => 'myapi_pick_ceil',
 ] );
 
